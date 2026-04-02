@@ -1,28 +1,29 @@
 package com.studentbuddy.model;
+
 import java.io.Serializable;
 
 public class Timetable implements Serializable {
 
-    private int timetableId;
-    private String subjectName;
+    private int id;
+    private String subject;
     private String day;
     private String startTime;
     private String endTime;
 
-    public Timetable(int timetableId, String subjectName, String day, String startTime, String endTime) {
-        this.timetableId = timetableId;
-        this.subjectName = subjectName;
+    public Timetable(int id, String subject, String day, String startTime, String endTime) {
+        this.id = id;
+        this.subject = subject;
         this.day = day;
         this.startTime = startTime;
         this.endTime = endTime;
     }
 
-    public int getTimetableId() {
-        return timetableId;
+    public int getId() {
+        return id;
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getSubject() {
+        return subject;
     }
 
     public String getDay() {
@@ -39,9 +40,8 @@ public class Timetable implements Serializable {
 
     @Override
     public String toString() {
-
-        return "\nTimetable ID: " + timetableId +
-                "\nSubject: " + subjectName +
+        return "\nID: " + id +
+                "\nSubject: " + subject +
                 "\nDay: " + day +
                 "\nTime: " + startTime + " - " + endTime +
                 "\n---------------------------";
