@@ -1,0 +1,29 @@
+.root {
+    -fx-font-family: "Segoe UI";
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #1F2A40;
+}
+
+/* Buttons */
+.button {
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+}
+
+.button:hover {
+    -fx-opacity: 0.85;
+}
+
+/* Tables */
+.table-view {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+/* Labels */
+.label {
+    -fx-font-size: 14px;
+}
