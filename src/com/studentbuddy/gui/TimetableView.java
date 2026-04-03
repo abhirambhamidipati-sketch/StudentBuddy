@@ -2,129 +2,126 @@ package com.studentbuddy.gui;
 
 import com.studentbuddy.model.Timetable;
 import com.studentbuddy.service.TimetableService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.time.*;
+
 public class TimetableView {
 
-    private TimetableService timetableService;
+    private TimetableService service;
     private TableView<Timetable> table;
 
-    public TimetableView(TimetableService timetableService) {
-        this.timetableService = timetableService;
+    public TimetableView(TimetableService service) {
+        this.service = service;
     }
 
     public VBox getView() {
 
         table = new TableView<>();
 
-        TableColumn<Timetable, String> subjectCol = new TableColumn<>("Subject");
-        subjectCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getSubject()));
+        TableColumn<Timetable, String> eventCol = new TableColumn<>("Event");
+        eventCol.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getEvent()));
 
-        TableColumn<Timetable, String> dayCol = new TableColumn<>("Day");
-        dayCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getDay()));
+        TableColumn<Timetable, String> dateCol = new TableColumn<>("Date");
+        dateCol.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(d.getValue().getDate().toString()));
 
         TableColumn<Timetable, String> timeCol = new TableColumn<>("Time");
-        timeCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getStartTime() + " - " + data.getValue().getEndTime()
-                ));
+        timeCol.setCellValueFactory(d -> new javafx.beans.property.SimpleStringProperty(
+                d.getValue().getStartTime() + " - " + d.getValue().getEndTime()
+        ));
 
-        table.getColumns().addAll(subjectCol, dayCol, timeCol);
+        TableColumn<Timetable, Boolean> doneCol = new TableColumn<>("Done");
+        doneCol.setCellValueFactory(d -> new javafx.beans.property.SimpleBooleanProperty(d.getValue().isCompleted()));
 
-        refreshTable();
+        doneCol.setCellFactory(col -> new TableCell<>() {
+            private final CheckBox checkBox = new CheckBox();
 
-        Button addBtn = new Button("Add Entry");
-        addBtn.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white;");
+            {
+                checkBox.setOnAction(e -> {
+                    Timetable item = getTableView().getItems().get(getIndex());
+                    service.toggleComplete(item.getId());
+                    refresh();
+                });
+            }
 
-        Button deleteBtn = new Button("Delete Entry");
-        deleteBtn.setStyle("-fx-background-color: #E74C3C; -fx-text-fill: white;");
+            @Override
+            protected void updateItem(Boolean item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) setGraphic(null);
+                else {
+                    checkBox.setSelected(item);
+                    setGraphic(checkBox);
+                }
+            }
+        });
 
-        addBtn.setOnAction(e -> showAddDialog());
-        deleteBtn.setOnAction(e -> deleteEntry());
+        table.getColumns().addAll(eventCol, dateCol, timeCol, doneCol);
 
-        VBox layout = new VBox(15);
+        refresh();
+
+        Button addBtn = new Button("Add Event");
+        addBtn.setOnAction(e -> showDialog());
+
+        VBox layout = new VBox(15, table, addBtn);
         layout.setPadding(new Insets(20));
-        layout.setStyle("-fx-background-color: white;");
-
-        layout.getChildren().addAll(table, addBtn, deleteBtn);
 
         return layout;
     }
 
-    private void refreshTable() {
-        ObservableList<Timetable> data =
-                FXCollections.observableArrayList(timetableService.getTimetableList());
-        table.setItems(data);
+    private void refresh() {
+        table.setItems(FXCollections.observableArrayList(service.getTimetableList()));
     }
 
-    private void showAddDialog() {
+    private void showDialog() {
 
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Add Timetable Entry");
+        dialog.setTitle("Add Event");
 
-        TextField subjectField = new TextField();
+        TextField eventField = new TextField();
 
-        ComboBox<String> dayBox = new ComboBox<>();
-        dayBox.getItems().addAll("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-        dayBox.setValue("Monday");
+        DatePicker datePicker = new DatePicker(LocalDate.now());
 
-        TextField startField = new TextField();
-        TextField endField = new TextField();
+        Spinner<Integer> startHour = new Spinner<>(0, 23, 10);
+        Spinner<Integer> startMin = new Spinner<>(0, 59, 0);
+
+        Spinner<Integer> endHour = new Spinner<>(0, 23, 11);
+        Spinner<Integer> endMin = new Spinner<>(0, 59, 0);
 
         VBox box = new VBox(10,
-                new Label("Subject"), subjectField,
-                new Label("Day"), dayBox,
-                new Label("Start Time"), startField,
-                new Label("End Time"), endField
+                new Label("Event"), eventField,
+                new Label("Date"), datePicker,
+                new Label("Start Time (HH MM)"), startHour, startMin,
+                new Label("End Time (HH MM)"), endHour, endMin
         );
-
-        box.setPadding(new Insets(15));
 
         dialog.getDialogPane().setContent(box);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        dialog.setResultConverter(button -> {
-            if (button == ButtonType.OK) {
+        dialog.setResultConverter(btn -> {
+            if (btn == ButtonType.OK) {
 
-                if (subjectField.getText().isEmpty()) {
-                    showAlert("Fill all fields!");
+                LocalTime start = LocalTime.of(startHour.getValue(), startMin.getValue());
+                LocalTime end = LocalTime.of(endHour.getValue(), endMin.getValue());
+
+                if (end.isBefore(start)) {
                     return null;
                 }
 
-                timetableService.addEntry(
-                        subjectField.getText(),
-                        dayBox.getValue(),
-                        startField.getText(),
-                        endField.getText()
+                service.addEntry(
+                        eventField.getText(),
+                        datePicker.getValue(),
+                        start,
+                        end
                 );
 
-                refreshTable();
+                refresh();
             }
             return null;
         });
 
         dialog.showAndWait();
-    }
-
-    private void deleteEntry() {
-
-        Timetable selected = table.getSelectionModel().getSelectedItem();
-
-        if (selected != null) {
-            timetableService.deleteEntry(selected.getId());
-            refreshTable();
-        }
-    }
-
-    private void showAlert(String msg) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setContentText(msg);
-        alert.showAndWait();
     }
 }
