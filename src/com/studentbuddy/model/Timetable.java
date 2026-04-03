@@ -1,49 +1,36 @@
 package com.studentbuddy.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Timetable implements Serializable {
 
     private int id;
-    private String subject;
-    private String day;
-    private String startTime;
-    private String endTime;
+    private String event;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private boolean completed;
 
-    public Timetable(int id, String subject, String day, String startTime, String endTime) {
+    public Timetable(int id, String event, LocalDate date, LocalTime startTime, LocalTime endTime) {
         this.id = id;
-        this.subject = subject;
-        this.day = day;
+        this.event = event;
+        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.completed = false;
     }
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
+    public String getEvent() { return event; }
+    public LocalDate getDate() { return date; }
+    public LocalTime getStartTime() { return startTime; }
+    public LocalTime getEndTime() { return endTime; }
 
-    public String getSubject() {
-        return subject;
-    }
+    public boolean isCompleted() { return completed; }
 
-    public String getDay() {
-        return day;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    @Override
-    public String toString() {
-        return "\nID: " + id +
-                "\nSubject: " + subject +
-                "\nDay: " + day +
-                "\nTime: " + startTime + " - " + endTime +
-                "\n---------------------------";
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }
