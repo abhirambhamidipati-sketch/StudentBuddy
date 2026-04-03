@@ -42,12 +42,26 @@ public class AnalyticsView {
         }
 
         // 🔥 PIE CHART
-        PieChart pie = new PieChart(FXCollections.observableArrayList(
+        PieChart pieChart = new PieChart(FXCollections.observableArrayList(
                 new PieChart.Data("Completed", completed),
                 new PieChart.Data("Pending", pending)
         ));
+        pieChart.setTitle("Task Completion");
 
-        pie.setTitle("Task Completion");
+        // 🔥 BAR CHART
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Task Distribution");
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Tasks");
+
+        series.getData().add(new XYChart.Data<>("Completed", completed));
+        series.getData().add(new XYChart.Data<>("Pending", pending));
+
+        barChart.getData().add(series);
 
         // 🔥 PRODUCTIVITY SCORE
         int taskScore = tasks.size() == 0 ? 0 : (completed * 100 / tasks.size());
@@ -72,7 +86,7 @@ public class AnalyticsView {
 
         Label timetableLabel = new Label("Today's Events: " + todayEvents);
 
-        VBox layout = new VBox(20, scoreLabel, timetableLabel, pie);
+        VBox layout = new VBox(20, scoreLabel, timetableLabel, pieChart, barChart);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: white;");
 
