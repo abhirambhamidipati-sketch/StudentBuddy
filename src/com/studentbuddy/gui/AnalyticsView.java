@@ -2,8 +2,9 @@ package com.studentbuddy.gui;
 
 import com.studentbuddy.model.Task;
 import com.studentbuddy.service.TaskService;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.chart.*;
 import javafx.scene.layout.VBox;
 
 import java.util.List;
@@ -20,54 +21,42 @@ public class AnalyticsView {
 
         List<Task> tasks = taskService.getTaskList();
 
-        int total = tasks.size();
         int completed = 0;
         int pending = 0;
 
         for (Task t : tasks) {
-            if (t.isCompleted()) {
-                completed++;
-            } else {
-                pending++;
-            }
+            if (t.isCompleted()) completed++;
+            else pending++;
         }
 
-        Label title = new Label("Task Analytics");
-        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        // 🔥 PIE CHART
+        PieChart pieChart = new PieChart();
+        pieChart.setTitle("Task Completion");
 
-        Label totalLabel = new Label("Total Tasks: " + total);
-        Label completedLabel = new Label("Completed: " + completed);
-        Label pendingLabel = new Label("Pending: " + pending);
+        pieChart.setData(FXCollections.observableArrayList(
+                new PieChart.Data("Completed", completed),
+                new PieChart.Data("Pending", pending)
+        ));
 
-        // Simple visual bar (text-based)
-        Label bar = new Label(generateBar(completed, total));
-        bar.setStyle("-fx-font-family: monospace;");
+        // 🔥 BAR CHART
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
 
-        VBox layout = new VBox(15);
+        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
+        barChart.setTitle("Task Distribution");
+
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Tasks");
+
+        series.getData().add(new XYChart.Data<>("Completed", completed));
+        series.getData().add(new XYChart.Data<>("Pending", pending));
+
+        barChart.getData().add(series);
+
+        VBox layout = new VBox(20, pieChart, barChart);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: white;");
 
-        layout.getChildren().addAll(title, totalLabel, completedLabel, pendingLabel, bar);
-
         return layout;
-    }
-
-    private String generateBar(int completed, int total) {
-
-        if (total == 0) return "No data";
-
-        int percent = (completed * 100) / total;
-        int bars = percent / 5;
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Progress: [");
-
-        for (int i = 0; i < bars; i++) sb.append("█");
-        for (int i = bars; i < 20; i++) sb.append("-");
-
-        sb.append("] ").append(percent).append("%");
-
-        return sb.toString();
     }
 }
