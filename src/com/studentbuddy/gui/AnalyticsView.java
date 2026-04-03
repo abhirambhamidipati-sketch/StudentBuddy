@@ -1,73 +1,81 @@
 package com.studentbuddy.gui;
 
+import com.studentbuddy.model.Goal;
 import com.studentbuddy.model.Task;
+import com.studentbuddy.model.Timetable;
+import com.studentbuddy.service.GoalService;
 import com.studentbuddy.service.TaskService;
+import com.studentbuddy.service.TimetableService;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
+import javafx.scene.chart.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class AnalyticsView {
 
     private TaskService taskService;
+    private GoalService goalService;
+    private TimetableService timetableService;
 
-    public AnalyticsView(TaskService taskService) {
-        this.taskService = taskService;
+    public AnalyticsView(TaskService t, GoalService g, TimetableService tt) {
+        this.taskService = t;
+        this.goalService = g;
+        this.timetableService = tt;
     }
 
     public VBox getView() {
 
         List<Task> tasks = taskService.getTaskList();
+        List<Goal> goals = goalService.getGoalList();
+        List<Timetable> timetable = timetableService.getTimetableList();
 
-        int total = tasks.size();
         int completed = 0;
         int pending = 0;
 
         for (Task t : tasks) {
-            if (t.isCompleted()) {
-                completed++;
-            } else {
-                pending++;
+            if (t.isCompleted()) completed++;
+            else pending++;
+        }
+
+        // 🔥 PIE CHART
+        PieChart pie = new PieChart(FXCollections.observableArrayList(
+                new PieChart.Data("Completed", completed),
+                new PieChart.Data("Pending", pending)
+        ));
+
+        pie.setTitle("Task Completion");
+
+        // 🔥 PRODUCTIVITY SCORE
+        int taskScore = tasks.size() == 0 ? 0 : (completed * 100 / tasks.size());
+
+        int goalTotal = 0;
+        for (Goal g : goals) goalTotal += g.getProgress();
+        int goalScore = goals.size() == 0 ? 0 : goalTotal / goals.size();
+
+        int productivity = (taskScore + goalScore) / 2;
+
+        Label scoreLabel = new Label("Productivity Score: " + productivity + "%");
+        scoreLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+
+        // 🔥 TIMETABLE INSIGHT
+        int todayEvents = 0;
+
+        for (Timetable t : timetable) {
+            if (t.getDate().equals(LocalDate.now())) {
+                todayEvents++;
             }
         }
 
-        Label title = new Label("Task Analytics");
-        title.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        Label timetableLabel = new Label("Today's Events: " + todayEvents);
 
-        Label totalLabel = new Label("Total Tasks: " + total);
-        Label completedLabel = new Label("Completed: " + completed);
-        Label pendingLabel = new Label("Pending: " + pending);
-
-        // Simple visual bar (text-based)
-        Label bar = new Label(generateBar(completed, total));
-        bar.setStyle("-fx-font-family: monospace;");
-
-        VBox layout = new VBox(15);
+        VBox layout = new VBox(20, scoreLabel, timetableLabel, pie);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: white;");
 
-        layout.getChildren().addAll(title, totalLabel, completedLabel, pendingLabel, bar);
-
         return layout;
-    }
-
-    private String generateBar(int completed, int total) {
-
-        if (total == 0) return "No data";
-
-        int percent = (completed * 100) / total;
-        int bars = percent / 5;
-
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Progress: [");
-
-        for (int i = 0; i < bars; i++) sb.append("█");
-        for (int i = bars; i < 20; i++) sb.append("-");
-
-        sb.append("] ").append(percent).append("%");
-
-        return sb.toString();
     }
 }
