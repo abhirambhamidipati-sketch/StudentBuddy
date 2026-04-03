@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import com.studentbuddy.reminder.ReminderService;
 
 public class MainApp extends Application {
 
@@ -21,6 +22,9 @@ public class MainApp extends Application {
 
         TimetableService timetableService = new TimetableService();
         timetableService.loadFromFile();
+
+        ReminderService reminderService = new ReminderService(timetableService);
+        reminderService.start();
 
         TaskView taskView = new TaskView(taskService);
         GoalView goalView = new GoalView(goalService);
