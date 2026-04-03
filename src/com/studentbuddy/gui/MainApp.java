@@ -29,7 +29,7 @@ public class MainApp extends Application {
         TaskView taskView = new TaskView(taskService);
         GoalView goalView = new GoalView(goalService);
         TimetableView timetableView = new TimetableView(timetableService);
-        AnalyticsView analyticsView = new AnalyticsView(taskService);
+        AnalyticsView analyticsView = new AnalyticsView(taskService, goalService, timetableService);
 
         Button taskBtn = new Button("Tasks");
         Button goalBtn = new Button("Goals");
