@@ -5,6 +5,8 @@ import {
   Draggable,
 } from "@hello-pangea/dnd";
 
+const API = "http://localhost:8080";
+
 export default function App() {
   const [tasks, setTasks] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -12,46 +14,66 @@ export default function App() {
 
   const columns = ["todo", "doing", "done"];
 
-  // 🔥 FETCH FROM BACKEND
+  // ── Fetch all tasks on mount ──────────────────────────────────────────────
   useEffect(() => {
-    fetch("http://localhost:8080/tasks")
+    fetch(`${API}/tasks`)
       .then((res) => res.json())
       .then((data) => setTasks(data));
   }, []);
 
-  // 🔥 DRAG UPDATE
-  const onDragEnd = (result) => {
-    if (!result.destination) return;
-
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === result.draggableId
-          ? { ...task, status: result.destination.droppableId }
-          : task
-      )
-    );
-  };
-
-  // 🔥 ADD TASK (SEND TO BACKEND)
+  // ── Add task ──────────────────────────────────────────────────────────────
   const addTask = () => {
     if (!newTask.trim()) return;
 
     const newItem = {
       id: Date.now().toString(),
-      title: newTask,
+      title: newTask.trim(),
       status: "todo",
     };
 
-    fetch("http://localhost:8080/tasks", {
+    fetch(`${API}/tasks`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newItem),
     }).then(() => {
-      setTasks([...tasks, newItem]);
+      setTasks((prev) => [...prev, newItem]);
       setNewTask("");
       setShowModal(false);
+    });
+  };
+
+  // ── Delete task ───────────────────────────────────────────────────────────
+  const deleteTask = (taskId) => {
+    // Optimistic: remove from UI immediately
+    setTasks((prev) => prev.filter((t) => t.id !== taskId));
+
+    fetch(`${API}/tasks/${taskId}`, { method: "DELETE" });
+  };
+
+  // ── Drag-drop: optimistic update + backend sync ───────────────────────────
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+
+    const { draggableId, source, destination } = result;
+    const newStatus = destination.droppableId;
+
+    // Always update UI
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === draggableId ? { ...t, status: newStatus } : t
+      )
+    );
+
+    // Only persist to backend when the column (status) actually changed
+    if (source.droppableId === destination.droppableId) return;
+
+    const task = tasks.find((t) => t.id === draggableId);
+    if (!task) return;
+
+    fetch(`${API}/tasks/${draggableId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: task.id, title: task.title, status: newStatus }),
     });
   };
 
@@ -63,18 +85,10 @@ export default function App() {
         <h1 className="text-2xl font-bold mb-10">StudentBuddy</h1>
 
         <nav className="space-y-4">
-          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">
-            Dashboard
-          </div>
-          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">
-            Tasks
-          </div>
-          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">
-            Goals
-          </div>
-          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">
-            Analytics
-          </div>
+          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">Dashboard</div>
+          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">Tasks</div>
+          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">Goals</div>
+          <div className="hover:bg-indigo-500 p-2 rounded cursor-pointer">Analytics</div>
         </nav>
       </div>
 
@@ -83,9 +97,7 @@ export default function App() {
 
         {/* TOPBAR */}
         <div className="bg-white shadow px-6 py-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-700">
-            Dashboard
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-700">Dashboard</h2>
 
           <button
             onClick={() => setShowModal(true)}
@@ -95,9 +107,8 @@ export default function App() {
           </button>
         </div>
 
-        {/* BOARD */}
+        {/* KANBAN BOARD */}
         <div className="flex-1 p-6 overflow-x-auto bg-gradient-to-br from-indigo-100 via-white to-blue-100">
-
           <DragDropContext onDragEnd={onDragEnd}>
             <div className="grid grid-cols-3 gap-6">
 
@@ -109,9 +120,7 @@ export default function App() {
                       {...provided.droppableProps}
                       className="bg-white rounded-xl p-4 shadow-md min-h-[400px]"
                     >
-                      <h2 className="text-lg font-semibold mb-4 capitalize">
-                        {col}
-                      </h2>
+                      <h2 className="text-lg font-semibold mb-4 capitalize">{col}</h2>
 
                       <div className="space-y-4">
                         {tasks
@@ -127,9 +136,19 @@ export default function App() {
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  className="bg-white p-4 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer"
+                                  className="relative bg-white p-4 rounded-xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition duration-300 cursor-pointer"
                                 >
-                                  {task.title}
+                                  <span className="pr-6 block">{task.title}</span>
+
+                                  {/* Delete button — stopPropagation prevents drag from firing */}
+                                  <button
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onClick={() => deleteTask(task.id)}
+                                    className="absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded-full text-gray-300 hover:text-red-400 hover:bg-red-50 transition text-xs leading-none"
+                                    title="Delete task"
+                                  >
+                                    ✕
+                                  </button>
                                 </div>
                               )}
                             </Draggable>
@@ -143,15 +162,13 @@ export default function App() {
 
             </div>
           </DragDropContext>
-
         </div>
       </div>
 
-      {/* MODAL */}
+      {/* ADD TASK MODAL */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
           <div className="bg-white p-6 rounded-xl shadow-lg w-96">
-
             <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
 
             <input
@@ -159,7 +176,9 @@ export default function App() {
               placeholder="Enter task..."
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && addTask()}
               className="w-full border p-2 rounded mb-4"
+              autoFocus
             />
 
             <div className="flex justify-end gap-2">
@@ -177,7 +196,6 @@ export default function App() {
                 Add
               </button>
             </div>
-
           </div>
         </div>
       )}
