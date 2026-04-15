@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mvn clean:*)",
+      "Bash(java -version)",
+      "Bash(./mvnw clean:*)",
+      "Bash(./mvnw package:*)",
+      "Bash(./mvnw spring-boot:run -q)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s http://localhost:8080/tasks)",
+      "Bash(curl -s -X POST http://localhost:8080/tasks -H 'Content-Type: application/json' -d '{\"id\":\"1744533000000\",\"title\":\"Study for OOPs exam\",\"status\":\"todo\"}')",
+      "Bash(curl -s -X POST http://localhost:8080/tasks -H 'Content-Type: application/json' -d '{\"id\":\"1744533000001\",\"title\":\"Complete Spring Boot project\",\"status\":\"doing\"}')",
+      "Bash(pkill -f \"spring-boot:run\")",
+      "Bash(pkill -f \"DemoApplication\")",
+      "Bash(echo \"Restarted PID: $!\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s -X POST http://localhost:8080/tasks -H 'Content-Type: application/json' -d '{\"id\":\"test-crud-001\",\"title\":\"Test CRUD task\",\"status\":\"todo\"}')",
+      "Bash(curl -s -X PUT http://localhost:8080/tasks/test-crud-001 -H 'Content-Type: application/json' -d '{\"title\":\"Test CRUD task\",\"status\":\"doing\"}')",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code}' -X PUT http://localhost:8080/tasks/nonexistent -H 'Content-Type: application/json' -d '{\"title\":\"x\",\"status\":\"todo\"}')",
+      "Bash(taskkill //F //IM java.exe)",
+      "Bash(curl -s -X PUT http://localhost:8080/tasks/test-crud-001 -H 'Content-Type: application/json' -d '{\"title\":\"Updated CRUD task\"}')",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code}' -X PUT http://localhost:8080/tasks/does-not-exist -H 'Content-Type: application/json' -d '{\"title\":\"x\",\"status\":\"todo\"}')",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code}' -X DELETE http://localhost:8080/tasks/test-crud-001)",
+      "Bash(curl -s -X POST http://localhost:8080/tasks -H 'Content-Type: application/json' -d '{\"id\":\"persist-test-999\",\"title\":\"Persistence check\",\"status\":\"todo\"}')",
+      "Bash(curl -s -X PUT http://localhost:8080/tasks/persist-test-999 -H 'Content-Type: application/json' -d '{\"title\":\"Persistence check\",\"status\":\"done\"}')",
+      "Bash(sort echo:*)",
+      "Bash(dir /S /B \"C:\\\\Users\\\\abhir\\\\Desktop\\\\UPES Semester - 4\\\\OOPs\\\\OOPs Project\\\\StudentBuddy\\\\backend\\\\src\\\\main\\\\java\")",
+      "Bash(dir /S /B \"C:\\\\Users\\\\abhir\\\\Desktop\\\\UPES Semester - 4\\\\OOPs\\\\OOPs Project\\\\StudentBuddy\\\\frontend\\\\src\")",
+      "Bash(curl -s http://localhost:8080/goals)",
+      "Bash(curl -s http://localhost:8080/events)",
+      "Bash(curl -s -X POST http://localhost:8080/goals -H 'Content-Type: application/json' -d '{\"id\":\"g1\",\"name\":\"Finish OOPs Project\",\"targetDate\":\"2026-05-01\",\"progress\":0}')",
+      "Bash(curl -s -X PUT http://localhost:8080/goals/g1 -H 'Content-Type: application/json' -d '{\"progress\":40}')",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code}' -X PUT http://localhost:8080/goals/none -H 'Content-Type: application/json' -d '{\"progress\":50}')",
+      "Bash(curl -s -X POST http://localhost:8080/events -H 'Content-Type: application/json' -d '{\"id\":\"e1\",\"title\":\"OOPs Lecture\",\"date\":\"2026-04-14\",\"startTime\":\"09:00\",\"endTime\":\"10:30\",\"completed\":false}')",
+      "Bash(curl -s -X PUT http://localhost:8080/events/e1 -H 'Content-Type: application/json' -d '{\"completed\":true}')",
+      "Bash(curl -s -o /dev/null -w 'HTTP %{http_code}' -X PUT http://localhost:8080/events/ghost -H 'Content-Type: application/json' -d '{\"completed\":true}')",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\" -X DELETE http://localhost:8080/goals/g1)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\" -X DELETE http://localhost:8080/events/e1)"
+    ]
+  }
+}

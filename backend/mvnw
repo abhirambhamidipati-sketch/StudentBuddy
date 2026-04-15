@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Minimal Maven wrapper — delegates to the locally cached Maven distribution.
+MAVEN_HOME="$HOME/.m2/wrapper/dists/apache-maven-3.9.14/db91789b"
+exec "$MAVEN_HOME/bin/mvn" "$@"
