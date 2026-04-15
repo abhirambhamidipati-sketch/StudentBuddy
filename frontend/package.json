@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
+<<<<<<< HEAD
+    "@stomp/stompjs": "^7.3.0",
+    "lucide-react": "^1.8.0",
+=======
+>>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },

@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+@echo off
+set "MAVEN_HOME=%USERPROFILE%\.m2\wrapper\dists\apache-maven-3.9.14\db91789b"
+call "%MAVEN_HOME%\bin\mvn.cmd" %*
+=======
 <# : batch portion
 @REM ----------------------------------------------------------------------------
 @REM Licensed to the Apache Software Foundation (ASF) under one
@@ -187,3 +192,4 @@ try {
 }
 
 Write-Output "MVN_CMD=$MAVEN_HOME/bin/$MVN_CMD"
+>>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
