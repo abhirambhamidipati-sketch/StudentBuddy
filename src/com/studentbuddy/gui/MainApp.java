@@ -28,8 +28,10 @@ public class MainApp extends Application {
 
         BorderPane root = new BorderPane();
         root.setCenter(dashboard.getView());
+        root.setStyle("-fx-background-color: #F5F7FA;");
 
         Scene scene = new Scene(root, 1100, 700);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         stage.setTitle("Student Buddy");
         stage.setScene(scene);

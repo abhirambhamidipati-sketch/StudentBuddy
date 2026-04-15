@@ -2,9 +2,8 @@ package com.studentbuddy.gui;
 
 import com.studentbuddy.service.*;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.ScrollPane;
 
 public class DashboardView {
 
@@ -18,37 +17,45 @@ public class DashboardView {
         this.timetableService = tt;
     }
 
-    public ScrollPane getView() {
+    public GridPane getView() {
 
-        VBox container = new VBox(30);
-        container.setPadding(new Insets(20));
-
-        // Sections
         TaskView taskView = new TaskView(taskService);
         GoalView goalView = new GoalView(goalService);
         TimetableView timetableView = new TimetableView(timetableService);
         AnalyticsView analyticsView = new AnalyticsView(taskService, goalService, timetableService);
 
-        Label taskTitle = new Label("Tasks");
-        Label goalTitle = new Label("Goals");
-        Label timetableTitle = new Label("Timetable");
-        Label analyticsTitle = new Label("Analytics");
+        VBox taskCard = createCard(taskView.getView());
+        VBox goalCard = createCard(goalView.getView());
+        VBox timetableCard = createCard(timetableView.getView());
+        VBox analyticsCard = createCard(analyticsView.getView());
 
-        taskTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        goalTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        timetableTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        analyticsTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20));
+        grid.setHgap(20);
+        grid.setVgap(20);
 
-        container.getChildren().addAll(
-                taskTitle, taskView.getView(),
-                goalTitle, goalView.getView(),
-                timetableTitle, timetableView.getView(),
-                analyticsTitle, analyticsView.getView()
-        );
+        // 2x2 layout
+        grid.add(taskCard, 0, 0);
+        grid.add(goalCard, 1, 0);
+        grid.add(timetableCard, 0, 1);
+        grid.add(analyticsCard, 1, 1);
 
-        ScrollPane scroll = new ScrollPane(container);
-        scroll.setFitToWidth(true);
+        // Make cards responsive
+        grid.setPrefSize(1000, 700);
 
-        return scroll;
+        return grid;
+    }
+
+    private VBox createCard(javafx.scene.Node content) {
+
+        VBox card = new VBox(content);
+        card.setPadding(new Insets(15));
+        card.setStyle("""
+                -fx-background-color: white;
+                -fx-background-radius: 12;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);
+                """);
+
+        return card;
     }
 }

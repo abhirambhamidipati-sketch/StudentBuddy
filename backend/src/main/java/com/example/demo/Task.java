@@ -1,5 +1,6 @@
 package com.example.demo;
 
+<<<<<<< HEAD
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
@@ -18,10 +19,17 @@ import jakarta.persistence.*;
  */
 @Entity
 @JsonIgnoreProperties("user")
+=======
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+>>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 public class Task {
 
     @Id
     private String id;
+<<<<<<< HEAD
 
     private String title;
     private String status;
@@ -47,3 +55,24 @@ public class Task {
     public void setStatus(String status) { this.status = status; }
     public void setUser(User user)       { this.user = user; }
 }
+=======
+    private String title;
+    private String status;
+
+    public Task() {}
+
+    public Task(String id, String title, String status) {
+        this.id = id;
+        this.title = title;
+        this.status = status;
+    }
+
+    public String getId() { return id; }
+    public String getTitle() { return title; }
+    public String getStatus() { return status; }
+
+    public void setId(String id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setStatus(String status) { this.status = status; }
+}
+>>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3

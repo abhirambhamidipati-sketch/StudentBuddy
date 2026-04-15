@@ -66,6 +66,8 @@ public class TimetableView {
         addBtn.setOnAction(e -> showDialog());
 
         VBox layout = new VBox(15, table, addBtn);
+        layout.setPadding(new Insets(10));
+        layout.setStyle("-fx-background-color: transparent;");
         layout.setPadding(new Insets(20));
 
         return layout;

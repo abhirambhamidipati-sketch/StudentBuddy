@@ -53,6 +53,8 @@ public class GoalView {
         deleteBtn.setOnAction(e -> deleteGoal());
 
         VBox layout = new VBox(15);
+        layout.setPadding(new Insets(10));
+        layout.setStyle("-fx-background-color: transparent;");
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: white;");
 
