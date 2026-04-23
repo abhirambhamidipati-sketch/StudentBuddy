@@ -6,24 +6,13 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.0.5</version>
-<<<<<<< HEAD
-		<relativePath/>
-=======
 		<relativePath/> <!-- lookup parent from repository -->
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
-<<<<<<< HEAD
-
-	<properties>
-		<java.version>21</java.version>
-	</properties>
-
-=======
 	<url/>
 	<licenses>
 		<license/>
@@ -40,7 +29,6 @@
 	<properties>
 		<java.version>21</java.version>
 	</properties>
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -52,10 +40,6 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-<<<<<<< HEAD
-
-=======
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
@@ -64,18 +48,12 @@
 
 		<!-- JPA -->
 		<dependency>
-<<<<<<< HEAD
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-=======
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-data-jpa</artifactId>
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 		</dependency>
 
 		<!-- H2 Database -->
 		<dependency>
-<<<<<<< HEAD
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -87,43 +65,53 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
-		<!-- JJWT — industry-standard JWT library (jjwt-orgjson avoids Jackson 3.x conflicts) -->
+		<!-- OAuth2 Client -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+
+		<!-- WebSocket (STOMP) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-websocket</artifactId>
+		</dependency>
+
+		<!-- Bean Validation -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
+		<!-- Jackson databind (compile-scope — required by LLMService) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<!-- JJWT — API -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-api</artifactId>
 			<version>0.12.6</version>
 		</dependency>
+
+		<!-- JJWT — implementation (runtime only) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- JJWT — Jackson integration (runtime only) -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-orgjson</artifactId>
+			<artifactId>jjwt-jackson</artifactId>
 			<version>0.12.6</version>
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Spring Security OAuth2 Client — Google login -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
-
-		<!-- WebSocket — STOMP broker for real-time reminders -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-websocket</artifactId>
-		</dependency>
-=======
-    		<groupId>com.h2database</groupId>
-    		<artifactId>h2</artifactId>
-   		 <scope>runtime</scope>
-		</dependency>
-		
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 	</dependencies>
 
 	<build>
@@ -147,13 +135,9 @@
 					<execution>
 						<id>default-compile</id>
 						<phase>compile</phase>
-<<<<<<< HEAD
-						<goals><goal>compile</goal></goals>
-=======
 						<goals>
 							<goal>compile</goal>
 						</goals>
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 						<configuration>
 							<annotationProcessorPaths>
 								<path>
@@ -166,13 +150,9 @@
 					<execution>
 						<id>default-testCompile</id>
 						<phase>test-compile</phase>
-<<<<<<< HEAD
-						<goals><goal>testCompile</goal></goals>
-=======
 						<goals>
 							<goal>testCompile</goal>
 						</goals>
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 						<configuration>
 							<annotationProcessorPaths>
 								<path>
@@ -186,8 +166,5 @@
 			</plugin>
 		</plugins>
 	</build>
-<<<<<<< HEAD
-=======
 
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
 </project>

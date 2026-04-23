@@ -269,6 +269,52 @@ public class ChatService {
                lower.matches("^(complete task|complete|done task|finish task)\\s+#\\d+$");
     }
 
+    /**
+     * Returns {@code true} when this service can meaningfully handle the message
+     * — either it matches a known system-command keyword, or the user has a
+     * pending numbered selection waiting to be resolved.
+     *
+     * Called by {@link ChatController} to decide whether to route to the LLM.
+     * Mirrors the exact keyword branches in {@link #handleMessage} so routing
+     * and execution are always in sync.
+     */
+    public boolean shouldHandle(String message, String userId) {
+        if (message == null || message.isBlank()) return true;   // → helpMessage()
+        String lower = message.toLowerCase().trim();
+
+        // Pending numbered selection (e.g. "#1" after a multi-match complete)
+        if (hasPendingSelection(userId) && looksLikeSelection(lower)) return true;
+
+        // Task-mutation commands
+        if (lower.startsWith("add task")     ||
+            lower.startsWith("create task")  ||
+            lower.startsWith("new task")     ||
+            lower.startsWith("complete task")||
+            lower.startsWith("done task")    ||
+            lower.startsWith("finish task")  ||
+            lower.startsWith("mark task"))   return true;
+
+        // Task-query commands
+        if (lower.contains("view tasks")  ||
+            lower.contains("show tasks")  ||
+            lower.contains("list tasks")  ||
+            lower.contains("my tasks"))   return true;
+
+        // Goal-query commands
+        if (lower.contains("view goals")  ||
+            lower.contains("show goals")  ||
+            lower.contains("list goals")  ||
+            lower.contains("my goals"))   return true;
+
+        // Analytics — match only unambiguous standalone keywords
+        if (lower.equals("analytics") ||
+            lower.equals("stats")     ||
+            lower.startsWith("analytics ") ||
+            lower.startsWith("stats "))  return true;
+
+        return false;
+    }
+
     private static String helpMessage() {
         return "I can help you with:\n" +
             "• add task <title>\n" +

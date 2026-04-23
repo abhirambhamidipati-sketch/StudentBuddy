@@ -6,9 +6,13 @@ C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GlobalExceptionHandler.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\Goal.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GoalController.java
+C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GoalNote.java
+C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GoalNoteController.java
+C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GoalNoteRepository.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\GoalRepository.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\JwtFilter.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\JwtUtil.java
+C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\LLMService.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\Notification.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\OAuth2LoginSuccessHandler.java
 C:\Users\abhir\Desktop\UPES Semester - 4\OOPs\OOPs Project\StudentBuddy\backend\src\main\java\com\example\demo\RateLimitFilter.java

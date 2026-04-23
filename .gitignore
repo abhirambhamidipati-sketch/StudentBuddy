@@ -32,3 +32,6 @@ bin/
 ###data###
 .db
 .mv.db
+
+###secrets###
+.env

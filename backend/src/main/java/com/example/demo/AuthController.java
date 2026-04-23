@@ -63,7 +63,7 @@ public class AuthController {
 
             userRepo.save(user);
 
-            return ResponseEntity.ok(Map.of("message", "User created"));
+            return tokenPair(user, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();

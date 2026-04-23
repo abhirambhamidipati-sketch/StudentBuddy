@@ -7,23 +7,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * POST /chat — authenticated rule-based chatbot endpoint.
+ * POST /chat — hybrid assistant endpoint.
  *
- * Request:  { "message": "add task Study for OOPs exam" }
- * Response: { "reply":   "Task added: \"Study for OOPs exam\"" }
+ * Routing:
+ *   System command (add task, view goals, analytics, …)
+ *       → ChatService  (rule-based, instant, no external call)
+ *   Everything else
+ *       → LLMService   (OpenAI gpt-4o-mini)
  *
- * Error contract: always returns HTTP 200 with a "reply" key.
- * Unexpected server errors are caught and returned as a user-friendly message
- * rather than a 500 stack trace.
+ * Request:  { "message": "What is polymorphism?" }
+ * Response: { "reply":   "Polymorphism is …" }
+ *
+ * Error contract: always HTTP 200 with a "reply" key — never a 5xx to the client.
  */
 @RestController
 @CrossOrigin
 public class ChatController {
 
     private final ChatService chatService;
+    private final LLMService  llmService;
 
-    public ChatController(ChatService chatService) {
+    public ChatController(ChatService chatService, LLMService llmService) {
         this.chatService = chatService;
+        this.llmService  = llmService;
     }
 
     private String currentUser() {
@@ -34,19 +40,26 @@ public class ChatController {
     public ResponseEntity<Map<String, String>> chat(
             @RequestBody(required = false) Map<String, String> body) {
         try {
-            // Null body (e.g. missing Content-Type or empty payload)
             if (body == null) {
-                return ResponseEntity.ok(Map.of("reply", "Please type a message."));
+                return ok("Please type a message.");
             }
             String message = body.getOrDefault("message", "").trim();
             if (message.isEmpty()) {
-                return ResponseEntity.ok(Map.of("reply", "Please type a message."));
+                return ok("Please type a message.");
             }
-            String reply = chatService.handleMessage(message, currentUser());
-            return ResponseEntity.ok(Map.of("reply", reply));
+
+            String userId = currentUser();
+            String reply  = chatService.shouldHandle(message, userId)
+                    ? chatService.handleMessage(message, userId)
+                    : llmService.getLLMResponse(message);
+
+            return ok(reply);
         } catch (Exception ex) {
-            // Never expose internal details — return a safe fallback message
-            return ResponseEntity.ok(Map.of("reply", "Something went wrong. Please try again."));
+            return ok("Something went wrong. Please try again.");
         }
+    }
+
+    private static ResponseEntity<Map<String, String>> ok(String reply) {
+        return ResponseEntity.ok(Map.of("reply", reply));
     }
 }

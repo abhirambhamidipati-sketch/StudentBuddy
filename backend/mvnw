@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-#!/usr/bin/env bash
-# Minimal Maven wrapper — delegates to the locally cached Maven distribution.
-MAVEN_HOME="$HOME/.m2/wrapper/dists/apache-maven-3.9.14/db91789b"
-exec "$MAVEN_HOME/bin/mvn" "$@"
-=======
 #!/bin/sh
 # ----------------------------------------------------------------------------
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -299,4 +293,3 @@ mv -- "$TMP_DOWNLOAD_DIR/$actualDistributionDir" "$MAVEN_HOME" || [ -d "$MAVEN_H
 
 clean || :
 exec_maven "$@"
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3

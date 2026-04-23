@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Target, TrendingUp } from "lucide-react";
+import { Plus, Trash2, Target, TrendingUp, MessageSquare } from "lucide-react";
 import { authFetch } from "../api.js";
+import GoalNotesModal from "../components/GoalNotesModal.jsx";
 
 export default function GoalsView() {
-  const [goals,     setGoals]     = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [form,      setForm]      = useState({ name: "", targetDate: "" });
-  const [errors,    setErrors]    = useState({});
+  const [goals,      setGoals]      = useState([]);
+  const [showModal,  setShowModal]  = useState(false);
+  const [notesGoal,  setNotesGoal]  = useState(null);   // goal whose notes are open
+  const [form,       setForm]       = useState({ name: "", targetDate: "" });
+  const [errors,     setErrors]     = useState({});
 
   useEffect(() => {
     authFetch("/goals").then((r) => r.json()).then(setGoals);
@@ -112,9 +114,10 @@ export default function GoalsView() {
               return (
                 <div
                   key={goal.id}
-                  className="bg-white rounded-2xl p-5 border border-gray-100 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group"
+                  className="bg-white rounded-2xl p-5 border border-gray-100 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg group flex flex-col"
                   style={{ boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}
                 >
+                  {/* Card header */}
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-start gap-2.5 min-w-0">
                       <div
@@ -146,6 +149,7 @@ export default function GoalsView() {
                     Target: {goal.targetDate}
                   </p>
 
+                  {/* Progress bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1.5">
                       <span className="text-gray-500 font-medium">Progress</span>
@@ -164,6 +168,29 @@ export default function GoalsView() {
                     onChange={(e) => updateProgress(goal.id, Number(e.target.value))}
                     className="w-full accent-indigo-600 cursor-pointer"
                   />
+
+                  {/* Notes button — pushed to bottom */}
+                  <div className="mt-4 pt-3 border-t border-gray-100">
+                    <button
+                      onClick={() => setNotesGoal(goal)}
+                      className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 active:scale-95"
+                      style={{
+                        color:           "#6366f1",
+                        backgroundColor: "#eef2ff",
+                      }}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.backgroundColor = "#e0e7ff";
+                        e.currentTarget.style.boxShadow = "0 2px 8px rgba(99,102,241,0.15)";
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.backgroundColor = "#eef2ff";
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
+                    >
+                      <MessageSquare size={13} />
+                      Notes &amp; History
+                    </button>
+                  </div>
                 </div>
               );
             })}
@@ -242,6 +269,14 @@ export default function GoalsView() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Goal Notes modal */}
+      {notesGoal && (
+        <GoalNotesModal
+          goal={notesGoal}
+          onClose={() => setNotesGoal(null)}
+        />
       )}
     </>
   );

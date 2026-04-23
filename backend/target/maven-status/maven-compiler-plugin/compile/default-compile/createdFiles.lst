@@ -3,11 +3,13 @@ com\example\demo\GlobalExceptionHandler.class
 com\example\demo\ReminderService.class
 com\example\demo\AuthController$RefreshRequest.class
 com\example\demo\GoalController.class
+com\example\demo\GoalNoteRepository.class
 com\example\demo\UserRepository.class
 com\example\demo\WebSocketConfig.class
 com\example\demo\RefreshToken.class
 com\example\demo\JwtFilter.class
 com\example\demo\TimetableController.class
+com\example\demo\LLMService.class
 com\example\demo\JwtUtil.class
 com\example\demo\AuthController$LogoutRequest.class
 com\example\demo\OAuth2LoginSuccessHandler.class
@@ -20,10 +22,12 @@ com\example\demo\ChatController.class
 com\example\demo\ChatService.class
 com\example\demo\RateLimitFilter.class
 com\example\demo\Task.class
+com\example\demo\GoalNoteController.class
 com\example\demo\GoalRepository.class
 com\example\demo\ReminderController.class
 com\example\demo\User.class
 com\example\demo\AuthController.class
+com\example\demo\GoalNote.class
 com\example\demo\TaskRepository.class
 com\example\demo\AuthController$AuthRequest.class
 com\example\demo\TaskController.class

@@ -1,7 +1,14 @@
 @tailwind base;
 @tailwind components;
-<<<<<<< HEAD
 @tailwind utilities;
-=======
-@tailwind utilities;
->>>>>>> 76ef85031b1cf4be3cb25367f38c3cfec22308a3
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
